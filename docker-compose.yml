@@ -1,0 +1,33 @@
+version: '3.7'
+
+networks:
+  url-shortener:
+    name: url-shortener
+    driver: bridge
+
+services:
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass strongpass123 --appendonly yes
+    networks:
+      - url-shortener
+    restart: always
+    ports:
+      - "6379:6379"
+
+  url-shortener-service:
+    build: .
+    image: url-shortener-service
+    environment:
+      - SPRING_REDIS_HOST=redis
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 30s
+      timeout: 5s
+    depends_on:
+      - redis
+    networks:
+      - url-shortener
+    ports:
+      - "8080:8080"
+    restart: always
