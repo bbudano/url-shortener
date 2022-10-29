@@ -1,6 +1,9 @@
 FROM gradle:7.2.0-jdk17 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
+ARG CORS_ORIGIN
+ENV CORS_ORIGIN=${CORS_ORIGIN}
+
 RUN gradle build --no-daemon
 
 FROM openjdk:17-oracle

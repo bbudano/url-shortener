@@ -20,6 +20,7 @@ services:
     image: url-shortener-service
     environment:
       - SPRING_REDIS_HOST=redis
+      - URL_SHORTENER_CORS_ORIGIN=${CORS_ORIGIN}
     healthcheck:
       test: "curl --fail --silent http://localhost:8080/actuator/health | grep UP || exit 1"
       interval: 30s
