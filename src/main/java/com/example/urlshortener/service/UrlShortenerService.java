@@ -1,5 +1,6 @@
-package com.example.urlshortener;
+package com.example.urlshortener.service;
 
+import com.example.urlshortener.exception.KeyNotFoundException;
 import com.google.common.hash.Hashing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,7 +24,7 @@ public class UrlShortenerService {
 
     public URI resolveForKey(String key) {
         Optional<String> keyOptional = Optional.ofNullable(redisTemplate.opsForValue().get(key));
-        if (keyOptional.isEmpty()) throw new KeyNotFoundException("Key not found.");
+        if (keyOptional.isEmpty()) throw new KeyNotFoundException("Key not found: " + key);
         return URI.create(keyOptional.get());
     }
 

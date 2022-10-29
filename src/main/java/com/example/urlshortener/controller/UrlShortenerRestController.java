@@ -1,5 +1,7 @@
-package com.example.urlshortener;
+package com.example.urlshortener.controller;
 
+import com.example.urlshortener.dto.ShortenUrlRequest;
+import com.example.urlshortener.service.UrlShortenerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,13 +17,13 @@ class UrlShortenerRestController {
     private final UrlShortenerService urlShortenerService;
 
     @PostMapping("/shorten")
-    ResponseEntity<?> shortenUrl(final @RequestBody String url) {
+    ResponseEntity<?> shortenUrl(final @RequestBody ShortenUrlRequest request) {
         return ResponseEntity
                 .ok()
                 .body(ServletUriComponentsBuilder
                         .fromCurrentContextPath()
                         .path("/{key}")
-                        .buildAndExpand(urlShortenerService.shorten(url))
+                        .buildAndExpand(urlShortenerService.shorten(request.getUrl()))
                         .toUriString());
     }
 
