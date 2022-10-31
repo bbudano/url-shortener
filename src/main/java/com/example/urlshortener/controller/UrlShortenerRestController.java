@@ -1,30 +1,25 @@
 package com.example.urlshortener.controller;
 
 import com.example.urlshortener.dto.ShortenUrlRequest;
+import com.example.urlshortener.dto.ShortenUrlResponse;
 import com.example.urlshortener.service.UrlShortenerService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Slf4j
 @RestController
+@RequestMapping
 @RequiredArgsConstructor
 class UrlShortenerRestController {
 
     private final UrlShortenerService urlShortenerService;
 
     @PostMapping("/shorten")
-    ResponseEntity<?> shortenUrl(final @RequestBody ShortenUrlRequest request) {
+    ResponseEntity<ShortenUrlResponse> shorten(final @RequestBody ShortenUrlRequest request) {
         return ResponseEntity
                 .ok()
-                .body(ServletUriComponentsBuilder
-                        .fromCurrentContextPath()
-                        .path("/{key}")
-                        .buildAndExpand(urlShortenerService.shorten(request.getUrl()))
-                        .toUriString());
+                .body(urlShortenerService.shorten(request));
     }
 
     @GetMapping("/{key}")
