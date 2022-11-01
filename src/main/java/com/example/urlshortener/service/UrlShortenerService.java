@@ -34,7 +34,7 @@ public class UrlShortenerService {
     private final RedisTemplate<String, String> redisTemplate;
 
     public ShortenUrlResponse shorten(ShortenUrlRequest request) {
-        if (!isValidURL(request.getUrl())) throw new RuntimeException("Invalid url");
+        if (!isValidURL(request.getUrl())) throw new UrlShortenerException("Invalid url", HttpStatus.BAD_REQUEST);
 
         String key = hashUrl(request.getUrl());
 
@@ -45,10 +45,6 @@ public class UrlShortenerService {
                 .path("/{key}")
                 .buildAndExpand(key)
                 .toUriString();
-
-        log.info("scheme - {}, host - {}",
-                ServletUriComponentsBuilder.fromCurrentContextPath().build().getScheme(),
-                ServletUriComponentsBuilder.fromCurrentContextPath().build().getHost());
 
         String base64QRCode = generateQRCode(shortenedUrl);
 
